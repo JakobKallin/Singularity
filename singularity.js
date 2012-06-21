@@ -5,7 +5,9 @@ var html = filesystem.readFileSync(htmlFileName, 'UTF-8');
 $ = cheerio.load(html);
 
 var includeScript = function() {
-	$(this).text('[Script contents]');
+	var scriptPath = $(this).attr('src');
+	var contents = filesystem.readFileSync(scriptPath, 'UTF-8');
+	$(this).text(contents);
 	$(this).removeAttr('src');
 };
 
