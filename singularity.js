@@ -5,11 +5,23 @@ var html = filesystem.readFileSync(htmlFileName, 'UTF-8');
 $ = cheerio.load(html);
 
 var includeScript = function() {
-	var scriptPath = $(this).attr('src');
-	var contents = filesystem.readFileSync(scriptPath, 'UTF-8');
+	var path = $(this).attr('src');
+	var contents = filesystem.readFileSync(path, 'UTF-8');
 	$(this).text(contents);
 	$(this).removeAttr('src');
 };
 
+var includeStylesheet = function() {
+	var path = $(this).attr('href');
+	var contents = filesystem.readFileSync(path, 'UTF-8');
+	$(this).removeAttr('href');
+	
+	var styleNode = $('<style></style>');
+	$(styleNode).text(contents);
+	$(this).after(styleNode);
+	$(this).remove();
+};
+
 $('script').each(includeScript);
+$('link[rel=stylesheet]').each(includeStylesheet);
 process.stdout.write($.html());
