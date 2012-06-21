@@ -5,10 +5,12 @@ var html = filesystem.readFileSync(htmlFileName, 'UTF-8');
 $ = cheerio.load(html);
 
 var includeScript = function() {
-	var path = $(this).attr('src');
-	var contents = filesystem.readFileSync(path, 'UTF-8');
-	$(this).text(contents);
-	$(this).removeAttr('src');
+	if ( $(this).attr('src') ) {
+		var path = $(this).attr('src');
+		var contents = filesystem.readFileSync(path, 'UTF-8');
+		$(this).text(contents);
+		$(this).removeAttr('src');
+	}
 };
 
 var includeStylesheet = function() {
