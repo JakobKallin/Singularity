@@ -5,12 +5,10 @@ var html = filesystem.readFileSync(htmlFileName, 'UTF-8');
 $ = cheerio.load(html);
 
 var includeScript = function() {
-	if ( $(this).attr('src') ) {
-		var path = $(this).attr('src');
-		var contents = filesystem.readFileSync(path, 'UTF-8');
-		$(this).text(contents);
-		$(this).removeAttr('src');
-	}
+	var path = $(this).attr('src');
+	var contents = filesystem.readFileSync(path, 'UTF-8');
+	$(this).text(contents);
+	$(this).removeAttr('src');
 };
 
 var includeStylesheet = function() {
@@ -24,6 +22,6 @@ var includeStylesheet = function() {
 	$(this).remove();
 };
 
-$('script').each(includeScript);
+$('script[src]').each(includeScript);
 $('link[rel=stylesheet]').each(includeStylesheet);
 process.stdout.write($.html());
