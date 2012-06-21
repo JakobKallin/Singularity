@@ -1,9 +1,13 @@
 var filesystem = require('fs');
-var jsdom = require('jsdom');
+var cheerio = require('cheerio');
 var htmlFileName = process.argv[2];
+var html = filesystem.readFileSync(htmlFileName, 'UTF-8');
+$ = cheerio.load(html);
 
-var callback = function(errors, window) {
-	console.log(window.document.title);
+var includeScript = function() {
+	$(this).text('[Script contents]');
+	$(this).removeAttr('src');
 };
 
-jsdom.env({html: htmlFileName, done: callback});
+$('script').each(includeScript);
+process.stdout.write($.html());
